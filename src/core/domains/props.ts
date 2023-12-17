@@ -1,3 +1,5 @@
+import { ID } from './types';
+
 export interface Props {
-  id: string;
+  id: ID;
 }
