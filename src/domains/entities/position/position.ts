@@ -4,43 +4,49 @@ import { Ingredient } from './values';
 import {
   IngredientIsNotString,
   NameIsEmptyError,
-  PhotoIsEmptyError,
   PriceIsNegative, 
 } from './error';
+import { PositionRepo } from './position.repo';
 
 export class Position extends Entity<PositionProps> {
-  rename(name: string): this {
+  repo!: PositionRepo;
+
+  async rename(name: string): Promise<this> {
     if (!name.trim()) throw new NameIsEmptyError();
 
-    this.props.name = name;
-    return this;
-  }
-
-  changePhoto(photo?: string | null): this {
-    if (!photo) {
-      this.props.photo = undefined;
-    } else {
-      this.props.photo = photo;
-    }
+    this.props = await this.repo.patch({ ...this.props, name });
 
     return this;
   }
 
-  changePrice(price: number): this {
+  async changePhoto(photo?: string | null): Promise<this> {
+    let newPhoto: string | undefined;
+
+    if (!photo) newPhoto = undefined;
+    else newPhoto = photo;
+
+    this.props = await this.repo.patch({ ...this.props, photo: newPhoto });
+    
+    return this;
+  }
+
+  async changePrice(price: number): Promise<this> {
     if (price < 0) throw new PriceIsNegative();
 
-    this.props.price = price;
+    this.props = await this.repo.patch({ ...this.props, price });
+
     return this;
   }
 
-  setIngredients(ingredients: Ingredient[]): this {
+  async setIngredients(ingredients: Ingredient[]): Promise<this> {
     if (ingredients.length) {
       ingredients.forEach((ingredient) => {
         if (typeof ingredient !== 'string') throw new IngredientIsNotString();
       });
     }
 
-    this.props.ingredients = ingredients;
+    this.props = await this.repo.patch({ ...this.props, ingredients});
+
     return this;
   }
 }

@@ -1,21 +1,23 @@
 import { Props } from './props';
+import { Repo } from './repo';
+import { GeneralRepo } from './types';
+
 
 export abstract class Entity<P extends Props> {
   props: P;
+
+  repo: GeneralRepo;
 
   get id(): P['id'] {
     return this.props.id;
   }
 
-  static create<P extends Props, E extends Entity<P>>( this: { new (props: P): E }, props: P ): E {
-    return new this(props);
-  }
-
-  constructor(props: P) {
+  constructor(props: P, repo: GeneralRepo) {
     this.props = props;
+    this.repo = repo;
   }
 
-  getProp(propName: keyof P): typeof this.props[keyof P] {
+  getProp<K extends keyof P>(propName: K): P[K] {
     return this.props[propName];
   }
 }
