@@ -1,7 +1,6 @@
 import { Repo } from '@/core/domains';
 import { Position } from './position';
-import { PositionProps } from './position.props';
 
-export abstract class PositionRepo extends Repo<PositionProps, Position> {
+export abstract class PositionRepo extends Repo<Position> {
   entityConstructor = Position;
 }

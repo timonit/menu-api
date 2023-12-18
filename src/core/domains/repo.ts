@@ -1,14 +1,15 @@
 import { Props } from './props';
 import { Entity } from './entity';
+import { GeneralRepo } from './types';
 
-export abstract class Repo<P extends Props, E extends Entity<P>> {
-  abstract entityConstructor: { create (props: P): E };
+export abstract class Repo<E extends Entity<Props>> {
+  abstract entityConstructor: { new (props: any, repo: GeneralRepo): E };
 
-  abstract getByIDs(ids: P['id']): Promise<E>;
+  abstract getByIDs(ids: Array<E['props']['id']>): Promise<E[]>;
 
-  abstract removeByIDs(ids: P['id']): Promise<void>;
+  abstract removeByIDs(ids: Array<E['props']['id']>): Promise<void>;
 
-  abstract add(props: Omit<P, 'id'>): Promise<E>;
+  abstract add(entity: E): Promise<E>;
 
-  abstract patch(props: P): Promise<E>;
+  abstract patch(props: E['props']): Promise<E['props']>;
 }
