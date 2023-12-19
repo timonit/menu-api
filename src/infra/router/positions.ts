@@ -12,13 +12,21 @@ import { PositionStorage } from '../repo/position.storage';
 const positionsRouter = Router();
 
 
+positionsRouter.get('/', async (req: Request, res: Response) => {
+  const repo = new PositionStorage();
+
+  const result = await repo.all();
+
+  res.send(result.map((el) => el.props));
+});
+
 positionsRouter.get('/:id', async (req: Request, res: Response) => {
   const id = req.params.id;
   const repo = new PositionStorage();
 
-  const result = await repo.getByIDs([id]);
+  const result = (await repo.getByIDs([id]))[0];
 
-  res.send(result.map((el) => el.props));
+  res.send(result.props);
 });
 
 positionsRouter.post('/', async (req: Request, res: Response) => {

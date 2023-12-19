@@ -1,7 +1,20 @@
+import { FindFilter } from '@/core/domains';
 import { Position, PositionProps, PositionRepo } from '@/domains';
 import { PrismaClient } from '@prisma/client';
 
+
 export class PositionStorage extends PositionRepo {
+  async all(): Promise<Position[]> {
+    const prisma = new PrismaClient();
+
+    const positionsData = await prisma.position.findMany();
+    prisma.$disconnect();
+
+    return positionsData.map(
+      (props) => new Position({...props, photo: props.photo ?? undefined}, this)
+    );
+  }
+
   async getByIDs(ids: string[]): Promise<Position[]> {
     const prisma = new PrismaClient();
 

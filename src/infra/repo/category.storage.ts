@@ -2,6 +2,27 @@ import { Category, CategoryProps, CategoryRepo } from '@/domains';
 import { PrismaClient } from '@prisma/client';
 
 export class CategoryStorage extends CategoryRepo {
+  async all(): Promise<Category[]> {
+    const prisma = new PrismaClient();
+
+    const categoriesData = await prisma.category.findMany({
+      include: {
+        positions: {
+          select: {
+            id: true
+          }
+        }
+      }
+    });
+    prisma.$disconnect();
+
+    return categoriesData.map(
+      (props) => {
+        const positions: string[] = props.positions.map((pos) => pos.id);
+        return new Category({...props, description: props.description ?? undefined, positions }, this)}
+    );
+  }
+
   async getByIDs(ids: string[]): Promise<Category[]> {
     const prisma = new PrismaClient();
 

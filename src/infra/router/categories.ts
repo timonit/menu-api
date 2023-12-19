@@ -16,13 +16,24 @@ import { PositionStorage } from '../repo/position.storage';
 
 const categoriesRouter = Router();
 
-categoriesRouter.get('/:id', async (req: Request, res: Response) => {
-  const id = req.params.id;
+
+categoriesRouter.get('/', async (req: Request, res: Response) => {
   const repo = new CategoryStorage();
 
-  const result = await repo.getByIDs([id]);
+  const result = await repo.all();
 
   res.send(result[0].props);
+});
+
+categoriesRouter.get('/:id', async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const categoryRepo = new CategoryStorage();
+  const positionRepo = new PositionStorage();
+
+  const category = (await categoryRepo.getByIDs([id]))[0];
+  const positions = (await positionRepo.getByIDs(category.getProp('positions')));
+
+  res.send({...category.props, positions: positions.map(pos => pos.props)});
 });
 
 categoriesRouter.post('/', async (req: Request, res: Response) => {
