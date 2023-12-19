@@ -8,6 +8,7 @@ import { ChangePriceInput } from '@/app/usecase/position/change-price/types';
 import { PositionRenameInput } from '@/app/usecase/position/position-rename/types';
 import { Request, Response, Router } from 'express';
 import { PositionStorage } from '../repo/position.storage';
+import { error } from 'console';
 
 const positionsRouter = Router();
 
@@ -29,52 +30,62 @@ positionsRouter.get('/:id', async (req: Request, res: Response) => {
   res.send(result.props);
 });
 
-positionsRouter.post('/', async (req: Request, res: Response) => {
-  const addPositionUC = new AddPositionUC();
-  const inputDTO = req.body as AddPositionInput;
-
-  const result = await addPositionUC.execute(inputDTO, new PositionStorage());
-
-  res.send(result);
+positionsRouter.post('/', async (req: Request, res: Response, next) => {
+  try {
+    const addPositionUC = new AddPositionUC();
+    const inputDTO = req.body as AddPositionInput;
+  
+    const result = await addPositionUC.execute(inputDTO, new PositionStorage());
+  
+    res.send(result);
+  } catch(err) {next(err)}
 });
 
-positionsRouter.patch('/:id/ingredients', async (req: Request, res: Response) => {
-  const id = req.params.id;
-  const uc = new ChangeIngredientsUC();
-  const inputDTO = { ...req.body, id} as ChangeIngredientsInput;
-  const result = await uc.execute(inputDTO, new PositionStorage());
- 
-  res.send(result);
+positionsRouter.patch('/:id/ingredients', async (req: Request, res: Response, next) => {
+  try {
+    const id = req.params.id;
+    const uc = new ChangeIngredientsUC();
+    const inputDTO = { ...req.body, id} as ChangeIngredientsInput;
+    const result = await uc.execute(inputDTO, new PositionStorage());
+   
+    res.send(result);
+  } catch(err) {next(err)}
 });
 
-positionsRouter.patch('/:id/photo', async (req: Request, res: Response) => {
-  const id = req.params.id;
-  const addPositionUC = new ChangePhotoUC();
-  const inputDTO = { ...req.body, id} as ChangePhotoInput;
-
-  const result = await addPositionUC.execute(inputDTO, new PositionStorage());
-
-  res.send(result);
+positionsRouter.patch('/:id/photo', async (req: Request, res: Response, next) => {
+  try {
+    const id = req.params.id;
+    const addPositionUC = new ChangePhotoUC();
+    const inputDTO = { ...req.body, id} as ChangePhotoInput;
+  
+    const result = await addPositionUC.execute(inputDTO, new PositionStorage());
+  
+    res.send(result);
+  } catch(err) {next(err)}
 });
 
-positionsRouter.patch('/:id/price', async (req: Request, res: Response) => {
-  const id = req.params.id;
-  const addPositionUC = new ChangePriceUC();
-  const inputDTO = { ...req.body, id} as ChangePriceInput;
-
-  const result = await addPositionUC.execute(inputDTO, new PositionStorage());
-
-  res.send(result);
+positionsRouter.patch('/:id/price', async (req: Request, res: Response, next) => {
+  try {
+    const id = req.params.id;
+    const addPositionUC = new ChangePriceUC();
+    const inputDTO = { ...req.body, id} as ChangePriceInput;
+  
+    const result = await addPositionUC.execute(inputDTO, new PositionStorage());
+  
+    res.send(result);
+  } catch(err) {next(err)}
 });
 
-positionsRouter.patch('/:id/rename', async (req: Request, res: Response) => {
-  const id = req.params.id;
-  const addPositionUC = new PositionRenameUC();
-  const inputDTO = { ...req.body, id} as PositionRenameInput;
-
-  const result = await addPositionUC.execute(inputDTO, new PositionStorage());
-
-  res.send(result);
+positionsRouter.patch('/:id/rename', async (req: Request, res: Response, next) => {
+  try {
+    const id = req.params.id;
+    const addPositionUC = new PositionRenameUC();
+    const inputDTO = { ...req.body, id} as PositionRenameInput;
+  
+    const result = await addPositionUC.execute(inputDTO, new PositionStorage());
+  
+    res.send(result);
+  } catch(err) {next(err)}
 });
 
 

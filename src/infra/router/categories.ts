@@ -17,72 +17,86 @@ import { PositionStorage } from '../repo/position.storage';
 const categoriesRouter = Router();
 
 
-categoriesRouter.get('/', async (req: Request, res: Response) => {
-  const repo = new CategoryStorage();
-
-  const result = await repo.all();
-
-  res.send(result[0].props);
-});
-
-categoriesRouter.get('/:id', async (req: Request, res: Response) => {
-  const id = req.params.id;
-  const categoryRepo = new CategoryStorage();
-  const positionRepo = new PositionStorage();
-
-  const category = (await categoryRepo.getByIDs([id]))[0];
-  const positions = (await positionRepo.getByIDs(category.getProp('positions')));
-
-  res.send({...category.props, positions: positions.map(pos => pos.props)});
-});
-
-categoriesRouter.post('/', async (req: Request, res: Response) => {
-  const inputDTO = req.body as AddCategoryInput;
-  const uc = new AddCategoryUC();
-
-  const result = uc.execute(inputDTO, new CategoryStorage());
-
-  res.send(result);
-});
-
-categoriesRouter.patch('/:id/description', async (req: Request, res: Response) => {
-  const id = req.params.id;
-  const inputDTO = { ...req.body, id} as ChangeDescriptionCategoryInput;
-  const uc = new ChangeDescriptionCategoryUC();
-
-  const result = await uc.execute(inputDTO, new CategoryStorage());
+categoriesRouter.get('/', async (req: Request, res: Response, next) => {
+  try {
+    const repo = new CategoryStorage();
   
-  res.send(result);
+    const result = await repo.all();
+  
+    res.send(result[0].props);
+  } catch(err) {next(err)}
 });
 
-categoriesRouter.patch('/:id/rename', async (req: Request, res: Response) => {
-  const id = req.params.id;
-  const inputDTO = { ...req.body, id} as RenameCategoryInput;
-  const uc = new RenameCategoryUC();
-
-  const result = await uc.execute(inputDTO, new CategoryStorage());
+categoriesRouter.get('/:id', async (req: Request, res: Response, next) => {
+  try {
+    const id = req.params.id;
+    const categoryRepo = new CategoryStorage();
+    const positionRepo = new PositionStorage();
   
-  res.send(result);
+    const category = (await categoryRepo.getByIDs([id]))[0];
+    const positions = (await positionRepo.getByIDs(category.getProp('positions')));
+  
+    res.send({...category.props, positions: positions.map(pos => pos.props)});
+  } catch(err) {next(err)}
 });
 
-categoriesRouter.post('/:categoryID/positions', async (req: Request, res: Response) => {
-  const targetCategoryID = req.params.categoryID;
-  const inputDTO = { positionDTO: req.body, targetCategoryID } as AddPositionToCategoryInput;
-  const uc = new AddPositionToCategoryUC();
-
-  const result = await uc.execute(inputDTO, new CategoryStorage(), new PositionStorage());
+categoriesRouter.post('/', async (req: Request, res: Response, next) => {
+  try {
+    const inputDTO = req.body as AddCategoryInput;
+    const uc = new AddCategoryUC();
   
-  res.send(result);
+    const result = uc.execute(inputDTO, new CategoryStorage());
+  
+    res.send(result);
+  } catch(err) {next(err)}
 });
 
-categoriesRouter.delete('/:targetCategoryID/positions/:positionID', async (req: Request, res: Response) => {
-  const { targetCategoryID, positionID } = req.params;
-  const inputDTO = { targetCategoryID, positionID } as RemovePositionFromCategoryInput;
-  const uc = new RemovePositionFromCategoryUC();
-
-  const result = await uc.execute(inputDTO, new CategoryStorage());
+categoriesRouter.patch('/:id/description', async (req: Request, res: Response, next) => {
+  try {
+    const id = req.params.id;
+    const inputDTO = { ...req.body, id} as ChangeDescriptionCategoryInput;
+    const uc = new ChangeDescriptionCategoryUC();
   
-  res.send(result);
+    const result = await uc.execute(inputDTO, new CategoryStorage());
+    
+    res.send(result);
+  } catch(err) {next(err)}
+});
+
+categoriesRouter.patch('/:id/rename', async (req: Request, res: Response, next) => {
+  try {
+    const id = req.params.id;
+    const inputDTO = { ...req.body, id} as RenameCategoryInput;
+    const uc = new RenameCategoryUC();
+  
+    const result = await uc.execute(inputDTO, new CategoryStorage());
+    
+    res.send(result);
+  } catch(err) {next(err)}
+});
+
+categoriesRouter.post('/:categoryID/positions', async (req: Request, res: Response, next) => {
+  try {
+    const targetCategoryID = req.params.categoryID;
+    const inputDTO = { positionDTO: req.body, targetCategoryID } as AddPositionToCategoryInput;
+    const uc = new AddPositionToCategoryUC();
+  
+    const result = await uc.execute(inputDTO, new CategoryStorage(), new PositionStorage());
+    
+    res.send(result);
+  } catch(err) {next(err)}
+});
+
+categoriesRouter.delete('/:targetCategoryID/positions/:positionID', async (req: Request, res: Response, next) => {
+  try {
+    const { targetCategoryID, positionID } = req.params;
+    const inputDTO = { targetCategoryID, positionID } as RemovePositionFromCategoryInput;
+    const uc = new RemovePositionFromCategoryUC();
+  
+    const result = await uc.execute(inputDTO, new CategoryStorage());
+    
+    res.send(result);
+  } catch(err) {next(err)}
 });
 
 export { categoriesRouter };
