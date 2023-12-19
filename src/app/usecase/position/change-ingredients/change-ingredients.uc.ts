@@ -7,8 +7,7 @@ export class ChangeIngredientsUC extends Usecase<Promise<ChangeIngredientsResult
     const position = (await repo.getByIDs([inputDTO.id]))[0];
 
     position.setIngredients(inputDTO.ingredients);
-    const updatedPosition = await repo.patch(position.props);
 
-    return updatedPosition.getProp('ingredients');
+    return position.getProp('ingredients');
   }
 }
