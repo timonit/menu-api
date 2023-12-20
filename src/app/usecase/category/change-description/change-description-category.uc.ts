@@ -6,7 +6,7 @@ export class ChangeDescriptionCategoryUC extends Usecase<Promise<ChangeDescripti
   async execute(inputDTO: ChangeDescriptionCategoryInput, repo: CategoryRepo): Promise<ChangeDescriptionCategoryResult> {
     const category = (await repo.getByIDs([inputDTO.id]))[0];
 
-    category.insertDescription(inputDTO.description);
+    await category.insertDescription(inputDTO.description);
 
     return {description: category.getProp('description') ?? ''};
   }

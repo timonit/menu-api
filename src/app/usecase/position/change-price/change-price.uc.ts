@@ -8,6 +8,6 @@ export class ChangePriceUC extends Usecase<Promise<ChangePriceResult>> {
 
     position.changePrice(inputDTO.price);
 
-    return position.getProp('price');
+    return {price: position.getProp('price')};
   }
 }

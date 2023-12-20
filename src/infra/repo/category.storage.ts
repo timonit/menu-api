@@ -1,10 +1,8 @@
 import { Category, CategoryProps, CategoryRepo } from '@/domains';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from './prisma';
 
 export class CategoryStorage extends CategoryRepo {
   async all(): Promise<Category[]> {
-    const prisma = new PrismaClient();
-
     const categoriesData = await prisma.category.findMany({
       include: {
         positions: {
@@ -14,7 +12,7 @@ export class CategoryStorage extends CategoryRepo {
         }
       }
     });
-    prisma.$disconnect();
+    await prisma.$disconnect();
 
     return categoriesData.map(
       (props) => {
@@ -24,8 +22,6 @@ export class CategoryStorage extends CategoryRepo {
   }
 
   async getByIDs(ids: string[]): Promise<Category[]> {
-    const prisma = new PrismaClient();
-
     const categoriesData = await prisma.category.findMany(
       {
         where: {
@@ -40,7 +36,7 @@ export class CategoryStorage extends CategoryRepo {
         }
       }
     );
-    prisma.$disconnect();
+    await prisma.$disconnect();
 
     return categoriesData.map(
       (props) => {
@@ -52,19 +48,15 @@ export class CategoryStorage extends CategoryRepo {
   }
 
   async removeByIDs(ids: string[]): Promise<void> {
-    const prisma = new PrismaClient();
-
     await prisma.category.deleteMany(
       { 
         where: { id: { in: ids } },
       }
     );
-    prisma.$disconnect();
+    await prisma.$disconnect();
   }
 
   async add(entity: Category): Promise<Category> {
-    const prisma = new PrismaClient();
-
     const result = await prisma.category.create({
       data: {
         id: entity.id,
@@ -82,7 +74,7 @@ export class CategoryStorage extends CategoryRepo {
         }
       }
     });
-    prisma.$disconnect();
+    await prisma.$disconnect();
 
     const positions: string[] = result.positions.map((pos) => pos.id);
     
@@ -90,8 +82,6 @@ export class CategoryStorage extends CategoryRepo {
   }
 
   async patch(props: CategoryProps): Promise<CategoryProps> {
-    const prisma = new PrismaClient();
-
     const result = await prisma.category.update({
       where: {
         id: props.id,
@@ -100,7 +90,7 @@ export class CategoryStorage extends CategoryRepo {
         name: props.name,
         description: props.description,
         positions: {
-          connect: props.positions.map<{id: string}>(id => ({id}))
+          set: props.positions.map<{id: string}>(id => ({id})),
         }
       },
       include: {
@@ -111,7 +101,7 @@ export class CategoryStorage extends CategoryRepo {
         }
       }
     });
-    prisma.$disconnect();
+    await prisma.$disconnect();
 
     const positions: string[] = result.positions.map((pos) => pos.id);
 
