@@ -16,9 +16,8 @@ export class Category extends Entity<CategoryProps> {
   }
 
   async insertDescription(description: string): Promise<this> {
-    if (!description.trim()) throw new DescriptionIsEmptyError();
 
-    this.props = await this.repo.patch({ ...this.props, description });
+    this.props = await this.repo.patch({ ...this.props, description: description.trim() });
 
     return this;
   }

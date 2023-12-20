@@ -14,7 +14,7 @@ export class CategoryStorage extends CategoryRepo {
         }
       }
     });
-    prisma.$disconnect();
+    await prisma.$disconnect();
 
     return categoriesData.map(
       (props) => {
@@ -40,7 +40,7 @@ export class CategoryStorage extends CategoryRepo {
         }
       }
     );
-    prisma.$disconnect();
+    await prisma.$disconnect();
 
     return categoriesData.map(
       (props) => {
@@ -59,7 +59,7 @@ export class CategoryStorage extends CategoryRepo {
         where: { id: { in: ids } },
       }
     );
-    prisma.$disconnect();
+    await prisma.$disconnect();
   }
 
   async add(entity: Category): Promise<Category> {
@@ -82,7 +82,7 @@ export class CategoryStorage extends CategoryRepo {
         }
       }
     });
-    prisma.$disconnect();
+    await prisma.$disconnect();
 
     const positions: string[] = result.positions.map((pos) => pos.id);
     
@@ -100,7 +100,8 @@ export class CategoryStorage extends CategoryRepo {
         name: props.name,
         description: props.description,
         positions: {
-          connect: props.positions.map<{id: string}>(id => ({id}))
+          // connect: props.positions.map<{id: string}>(id => ({id})),
+          set: props.positions.map<{id: string}>(id => ({id})),
         }
       },
       include: {
@@ -111,7 +112,7 @@ export class CategoryStorage extends CategoryRepo {
         }
       }
     });
-    prisma.$disconnect();
+    await prisma.$disconnect();
 
     const positions: string[] = result.positions.map((pos) => pos.id);
 

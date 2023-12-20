@@ -17,7 +17,7 @@ export class AddPositionToCategoryUC extends Usecase<Promise<AddPositionToCatego
       position = new Position(props, positionRepo);
     }
 
-    category.addPosition(position);
+    await category.addPosition(position);
 
     return category.getProp('positions');
   }

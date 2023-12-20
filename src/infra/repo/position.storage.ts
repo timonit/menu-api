@@ -8,7 +8,7 @@ export class PositionStorage extends PositionRepo {
     const prisma = new PrismaClient();
 
     const positionsData = await prisma.position.findMany();
-    prisma.$disconnect();
+    await prisma.$disconnect();
 
     return positionsData.map(
       (props) => new Position({...props, photo: props.photo ?? undefined}, this)
@@ -25,7 +25,7 @@ export class PositionStorage extends PositionRepo {
         }
       }
     );
-    prisma.$disconnect();
+    await prisma.$disconnect();
 
     return positionsData.map(
       (props) => new Position({...props, photo: props.photo ?? undefined}, this)
@@ -40,7 +40,7 @@ export class PositionStorage extends PositionRepo {
         where: { id: { in: ids } },
       }
     );
-    prisma.$disconnect();
+    await prisma.$disconnect();
   }
 
   async add(entity: Position): Promise<Position> {
@@ -49,7 +49,7 @@ export class PositionStorage extends PositionRepo {
     const result = await prisma.position.create({
       data: entity.props
     });
-    prisma.$disconnect();
+    await prisma.$disconnect();
 
     return new Position({...result, photo: result.photo ?? undefined }, this);
   }
@@ -63,7 +63,7 @@ export class PositionStorage extends PositionRepo {
       },
       data: props
     });
-    prisma.$disconnect();
+    await prisma.$disconnect();
 
     return {...result, photo: result.photo ?? undefined };
   }

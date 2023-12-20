@@ -23,7 +23,7 @@ categoriesRouter.get('/', async (req: Request, res: Response, next) => {
   
     const result = await repo.all();
   
-    res.send(result[0].props);
+    res.send(result.map((el) => el.props));
   } catch(err) {next(err)}
 });
 
@@ -45,9 +45,20 @@ categoriesRouter.post('/', async (req: Request, res: Response, next) => {
     const inputDTO = req.body as AddCategoryInput;
     const uc = new AddCategoryUC();
   
-    const result = uc.execute(inputDTO, new CategoryStorage());
+    const result = await uc.execute(inputDTO, new CategoryStorage());
   
     res.send(result);
+  } catch(err) {next(err)}
+});
+
+
+categoriesRouter.delete('/:id', async (req: Request, res: Response, next) => {
+  try {
+    const { id } = req.params;
+    const categoryRepo = new CategoryStorage();
+    await categoryRepo.removeByIDs([id]);
+    
+    res.send(id);
   } catch(err) {next(err)}
 });
 
@@ -80,7 +91,7 @@ categoriesRouter.post('/:categoryID/positions', async (req: Request, res: Respon
     const targetCategoryID = req.params.categoryID;
     const inputDTO = { positionDTO: req.body, targetCategoryID } as AddPositionToCategoryInput;
     const uc = new AddPositionToCategoryUC();
-  
+    console.log(inputDTO)
     const result = await uc.execute(inputDTO, new CategoryStorage(), new PositionStorage());
     
     res.send(result);

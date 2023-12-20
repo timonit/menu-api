@@ -3,4 +3,4 @@ export type ChangePriceInput = {
   price: number;
 }
 
-export type ChangePriceResult = number;
+export type ChangePriceResult = {price: number};
