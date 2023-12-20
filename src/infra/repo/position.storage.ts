@@ -1,12 +1,9 @@
-import { FindFilter } from '@/core/domains';
 import { Position, PositionProps, PositionRepo } from '@/domains';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from './prisma';
 
 
 export class PositionStorage extends PositionRepo {
   async all(): Promise<Position[]> {
-    const prisma = new PrismaClient();
-
     const positionsData = await prisma.position.findMany();
     await prisma.$disconnect();
 
@@ -16,8 +13,6 @@ export class PositionStorage extends PositionRepo {
   }
 
   async getByIDs(ids: string[]): Promise<Position[]> {
-    const prisma = new PrismaClient();
-
     const positionsData = await prisma.position.findMany(
       {
         where: {
@@ -33,8 +28,6 @@ export class PositionStorage extends PositionRepo {
   }
 
   async removeByIDs(ids: string[]): Promise<void> {
-    const prisma = new PrismaClient();
-
     await prisma.position.deleteMany(
       { 
         where: { id: { in: ids } },
@@ -44,8 +37,6 @@ export class PositionStorage extends PositionRepo {
   }
 
   async add(entity: Position): Promise<Position> {
-    const prisma = new PrismaClient();
-
     const result = await prisma.position.create({
       data: entity.props
     });
@@ -55,8 +46,6 @@ export class PositionStorage extends PositionRepo {
   }
 
   async patch(props: PositionProps): Promise<PositionProps> {
-    const prisma = new PrismaClient();
-
     const result = await prisma.position.update({
       where: {
         id: props.id,
