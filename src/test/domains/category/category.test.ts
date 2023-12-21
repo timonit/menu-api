@@ -17,6 +17,7 @@ describe('category', () => {
 
     repo = {
       entityConstructor: Category,
+      all(): any {},
       getByIDs: async function (ids: string[]): Promise<Category[]> {
         return [new Category(props, this)];
       },

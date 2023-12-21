@@ -17,6 +17,7 @@ describe('position', () => {
 
     repo = {
       entityConstructor: Position,
+      all(): any {},
       getByIDs: async function (ids: string[]): Promise<Position[]> {
         return [new Position(props, this)];
       },
