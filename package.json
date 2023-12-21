@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "serve": "ts-node ./src/infra/server.ts",
+    "start": "npm instal && npm run migration:generate && npm run migration:deploy && npm run serve",
     "test": "jest",
     "migration:generate": "prisma migration generate --schema=./src/infra/prisma/schema.prisma",
     "migration:deploy": "prisma migration deploy --schema=./src/infra/prisma/schema.prisma"
