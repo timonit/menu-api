@@ -13,11 +13,12 @@ import { RenameCategoryInput } from '@/app/usecase/category/rename-category/type
 import { Request, Response, Router } from 'express';
 import { CategoryStorage } from '../repo';
 import { PositionStorage } from '../repo/position.storage';
+import { checkToken } from './utils';
 
 const categoriesRouter = Router();
 
 
-categoriesRouter.get('/', async (req: Request, res: Response, next) => {
+categoriesRouter.get('/', checkToken, async (req: Request, res: Response, next) => {
   try {
     const repo = new CategoryStorage();
   
