@@ -8,7 +8,7 @@ export class PositionStorage extends PositionRepo {
     await prisma.$disconnect();
 
     return positionsData.map(
-      (props) => new Position({...props, photo: props.photo ?? undefined}, this)
+      (props:any) => new Position({...props, photo: props.photo ?? undefined}, this)
     );
   }
 
@@ -23,7 +23,7 @@ export class PositionStorage extends PositionRepo {
     await prisma.$disconnect();
 
     return positionsData.map(
-      (props) => new Position({...props, photo: props.photo ?? undefined}, this)
+      (props:any) => new Position({...props, photo: props.photo ?? undefined}, this)
     );
   }
 
