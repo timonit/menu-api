@@ -15,8 +15,8 @@ export class CategoryStorage extends CategoryRepo {
     await prisma.$disconnect();
 
     return categoriesData.map(
-      (props) => {
-        const positions: string[] = props.positions.map((pos) => pos.id);
+      (props:any) => {
+        const positions: string[] = props.positions.map((pos:any) => pos.id);
         return new Category({...props, description: props.description ?? undefined, positions }, this)}
     );
   }
@@ -39,8 +39,8 @@ export class CategoryStorage extends CategoryRepo {
     await prisma.$disconnect();
 
     return categoriesData.map(
-      (props) => {
-        const positions: string[] = props.positions.map((pos) => pos.id);
+      (props:any) => {
+        const positions: string[] = props.positions.map((pos:any) => pos.id);
         
         return new Category({ ...props, description: props.description ?? undefined, positions }, this);
       }
@@ -76,7 +76,7 @@ export class CategoryStorage extends CategoryRepo {
     });
     await prisma.$disconnect();
 
-    const positions: string[] = result.positions.map((pos) => pos.id);
+    const positions: string[] = result.positions.map((pos:any) => pos.id);
     
     return new Category({...result, positions, description: result.description ?? undefined }, this);
   }
@@ -103,7 +103,7 @@ export class CategoryStorage extends CategoryRepo {
     });
     await prisma.$disconnect();
 
-    const positions: string[] = result.positions.map((pos) => pos.id);
+    const positions: string[] = result.positions.map((pos:any) => pos.id);
 
     return {...result, positions, description: result.description ?? undefined };
   }
