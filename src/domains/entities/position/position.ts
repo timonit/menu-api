@@ -4,15 +4,32 @@ import { Ingredient } from './values';
 import {
   IngredientIsNotString,
   NameIsEmptyError,
+  NameIsNotString,
   PriceIsNegative, 
+  PriceIsNotNumber,
 } from './error';
 import { PositionRepo } from './position.repo';
 
 export class Position extends Entity<PositionProps> {
   repo!: PositionRepo;
 
-  async rename(name: string): Promise<this> {
+  priceValidate(price: number) {
+    if (Number.isNaN(price)) throw new PriceIsNotNumber();
+    if (price < 0) throw new PriceIsNegative();
+  }
+
+  nameValidate(name: string) {
+    if (typeof name !== 'string') throw new NameIsNotString();
     if (!name.trim()) throw new NameIsEmptyError();
+  }
+
+  validateProps(props: PositionProps): void {
+    this.nameValidate(props.name);
+    this.priceValidate(props.price);
+  }
+
+  async rename(name: string): Promise<this> {
+    this.nameValidate(name);
 
     this.props = await this.repo.patch({ ...this.props, name });
 
@@ -31,7 +48,7 @@ export class Position extends Entity<PositionProps> {
   }
 
   async changePrice(price: number): Promise<this> {
-    if (price < 0) throw new PriceIsNegative();
+    this.priceValidate(price);
 
     this.props = await this.repo.patch({ ...this.props, price });
 

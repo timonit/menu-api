@@ -18,7 +18,7 @@ import { checkToken } from './utils';
 const categoriesRouter = Router();
 
 
-categoriesRouter.get('/', checkToken, async (req: Request, res: Response, next) => {
+categoriesRouter.get('/', async (req: Request, res: Response, next) => {
   try {
     const repo = new CategoryStorage();
   
@@ -41,7 +41,7 @@ categoriesRouter.get('/:id', async (req: Request, res: Response, next) => {
   } catch(err) {next(err)}
 });
 
-categoriesRouter.post('/', async (req: Request, res: Response, next) => {
+categoriesRouter.post('/', checkToken, async (req: Request, res: Response, next) => {
   try {
     const inputDTO = req.body as AddCategoryInput;
     const uc = new AddCategoryUC();
@@ -53,7 +53,7 @@ categoriesRouter.post('/', async (req: Request, res: Response, next) => {
 });
 
 
-categoriesRouter.delete('/:id', async (req: Request, res: Response, next) => {
+categoriesRouter.delete('/:id', checkToken, async (req: Request, res: Response, next) => {
   try {
     const { id } = req.params;
     const categoryRepo = new CategoryStorage();
@@ -63,7 +63,7 @@ categoriesRouter.delete('/:id', async (req: Request, res: Response, next) => {
   } catch(err) {next(err)}
 });
 
-categoriesRouter.patch('/:id/description', async (req: Request, res: Response, next) => {
+categoriesRouter.patch('/:id/description', checkToken, async (req: Request, res: Response, next) => {
   try {
     const id = req.params.id;
     const inputDTO = { ...req.body, id} as ChangeDescriptionCategoryInput;
@@ -75,7 +75,7 @@ categoriesRouter.patch('/:id/description', async (req: Request, res: Response, n
   } catch(err) {next(err)}
 });
 
-categoriesRouter.patch('/:id/rename', async (req: Request, res: Response, next) => {
+categoriesRouter.patch('/:id/rename', checkToken, async (req: Request, res: Response, next) => {
   try {
     const id = req.params.id;
     const inputDTO = { ...req.body, id} as RenameCategoryInput;
@@ -87,7 +87,7 @@ categoriesRouter.patch('/:id/rename', async (req: Request, res: Response, next) 
   } catch(err) {next(err)}
 });
 
-categoriesRouter.post('/:categoryID/positions', async (req: Request, res: Response, next) => {
+categoriesRouter.post('/:categoryID/positions', checkToken, async (req: Request, res: Response, next) => {
   try {
     const targetCategoryID = req.params.categoryID;
     const inputDTO = { positionDTO: req.body, targetCategoryID } as AddPositionToCategoryInput;
@@ -99,7 +99,7 @@ categoriesRouter.post('/:categoryID/positions', async (req: Request, res: Respon
   } catch(err) {next(err)}
 });
 
-categoriesRouter.delete('/:targetCategoryID/positions/:positionID', async (req: Request, res: Response, next) => {
+categoriesRouter.delete('/:targetCategoryID/positions/:positionID', checkToken, async (req: Request, res: Response, next) => {
   try {
     const { targetCategoryID, positionID } = req.params;
     const inputDTO = { targetCategoryID, positionID } as RemovePositionFromCategoryInput;

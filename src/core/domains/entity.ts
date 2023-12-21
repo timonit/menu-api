@@ -12,7 +12,11 @@ export abstract class Entity<P extends Props> {
     return this.props.id;
   }
 
+  abstract validateProps(props: P): void;
+
   constructor(props: P, repo: GeneralRepo) {
+    this.validateProps(props);
+
     this.props = props;
     this.repo = repo;
   }
